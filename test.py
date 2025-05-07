@@ -18,9 +18,12 @@ with open("jasenresult.example.json", "r") as jsonfile:
                 font-family: sans-serif;
             }
             table {
+                table-layout: fixed;
                 padding-top: 15px;
                 border-collapse: collapse;
                 width: 98%;
+                max-height: 10px;
+                overflow-y: auto;
                 margin-bottom: 1em;
             }
             td, th {
@@ -38,6 +41,7 @@ with open("jasenresult.example.json", "r") as jsonfile:
       <body>
         <h1>Jasen reporter tool</h1>
         <h2>Species prediction</h2>
+        <h3></h3>
         <table>
             <tr>
                 <th>Scientific name</th>
@@ -59,6 +63,7 @@ with open("jasenresult.example.json", "r") as jsonfile:
         {% endfor %}
         </table>
         <h2>Typing</h2>
+        <h3></h3>
         {% for typ in data["typing_result"] %}
         <table>
             <tr>
@@ -89,18 +94,66 @@ with open("jasenresult.example.json", "r") as jsonfile:
         {% endfor %}
         <h2>Other predictions</h2>
         <h3>Report from resfinder</h3>
+        <div style="overflow-y: scroll;">
         <table>
             <tr>
                 <th>Resistant</th>
                 <th>Susceptible</th>
             </tr>
-        {% for phe in data["element_type_result"] %} 
+        {% for phe in data["element_type_result"] %}
             <tr>
                 <td> {{phe["result"]["phenotypes"]["susceptible"]}} </td>
                 <td> {{phe["result"]["phenotypes"]["resistant"]}} </td>
             </tr>
         {% endfor %}
         </table>
+        </div>
+        <h2>Quality Control (QC)</h2>    
+        <h3></h3>
+        {% for qua in data["qc"] %} 
+        <table>
+            <tr><th scope="row">Software</th>                             
+                <td> {{ qua["software"] }} </td></tr>
+            <tr><th scope="row">Version</th>      
+                <td> {{ qua["version"] }} </td></tr>
+            <tr><th scope="row">Total length</th>                      
+                <td> {{ qua["result"]["total_length"] }} </td></tr>    
+            <tr><th scope="row">Reference length</th>                      
+                <td> {{ qua["result"]["reference_length"] }} </td></tr>    
+            <tr><th scope="row">Largest contig</th>                      
+                <td> {{ qua["result"]["largest_contig"] }} </td></tr>    
+            <tr><th scope="row">Number of contigs</th>               
+                <td> {{ qua["result"]["n_contigs"] }} </td></tr>     
+            <tr><th scope="row">N50</th>                       
+                <td> {{ qua["result"]["n50"] }} </td></tr>                                                  
+            <tr><th scope="row">Assembly GC</th>      
+                <td> {{ qua["result"]["assembly_gc"] }} </td></tr> 
+            <tr><th scope="row">Reference GC</th>                      
+                <td> {{ qua["result"]["reference_gc"] }} </td></tr>                                
+            <tr><th scope="row">Duplication ratio</th>      
+                <td> {{ qua["result"]["duplication_ratio"] }} </td></tr>
+        </table>            
+        {% endfor %}
+        {% for qua in data["qc"] %}       
+        <table>
+            <tr><th scope="row">Software</th>       
+                <td> {{ qua["software"] }} </td></tr
+            <tr><th scope="row">Version</th>        
+                <td> {{ qua["version"] }} </td></tr>                                   
+            <tr><th scope="row">Insert size</th>    
+                <td> {{ qua["result"]["ins_size"] }} </td></tr>                                         
+            <tr><th scope="row">Insert size deviation</th>    
+                <td> {{ qua["result"]["ins_size_dev"] }} </td></tr>
+            <tr><th scope="row">Mean coverage</th>                 
+                <td> {{ qua["result"]["mean_cov"] }} </td></tr>
+            <tr><th scope="row">Mapped reads</th>                      
+                <td> {{ qua["result"]["mapped_reads"] }} </td></tr>
+            <tr><th scope="row">Total reads</th>                    
+                <td> {{ qua["result"]["tot_reads"] }} </td></tr>                                                     
+            <tr><th scope="row">IQR Median</th>    
+                <td> {{ qua["result"]["iqr_median"] }} </td></tr>           
+        </table>
+        {% endfor %}                                                                                                                                                                                  
       </body>
     </html>
     ''')
