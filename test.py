@@ -17,17 +17,32 @@ with open("jasenresult.example.json", "r") as jsonfile:
             body {
                 font-family: sans-serif;
             }
+            .table-container {
+                border: 2.5px solid grey;
+                background-color: #E8E8E8;
+                width: 98%;
+            }
             table {
                 table-layout: fixed;
                 padding-top: 15px;
+                padding-right: 0;
                 border-collapse: collapse;
                 width: 98%;
                 max-height: 10px;
                 overflow-y: auto;
                 margin-bottom: 1em;
             }
-            td, th {
-                border: 2px solid grey;
+            th {
+                border-top: none;
+                border-bottom: 2px solid grey;
+                border-right: 2px solid grey; 
+                text-align: left;
+                padding:8px;
+            }
+            td {
+                border-right: 2px solid grey;
+                border-top: none;
+                border-bottom: none;
                 text-align: left;
                 padding:8px;
             }
@@ -36,12 +51,43 @@ with open("jasenresult.example.json", "r") as jsonfile:
                 margin: 2em 0 0 0;
                 padding: 0 0 .3em 0;
             }
+            }
+            .wrapper.closed {
+                max-height: 120px;
+                overflow: hidden!important;
+                border-width: 4px;
+                border-style: solid solid dotted solid;
+                border-color: #ccc;
+                background-image: linear-gradient(#efefef, white);
+            }
+            .wrapper.open {
+                max-height: 120000px;
+                border: 4px solid #eec;
+                background: #ffffef;
+            }
         </style>
+        
+        <script>
+            function toggleExpandTable(obj) {
+                obj.classList.toggle("open");
+                obj.classList.toggle("closed");
+            }
+            
+            function toggleLabel(obj) {
+                if (obj.textContent === "EXPAND TABLE") {
+                    obj.textContent = "COLLAPSE TABLE";
+                } else {
+                    obj.textContent = "EXPAND TABLE";
+                }
+            }
+        </script>
+
       </head>
       <body>
         <h1>Jasen reporter tool</h1>
         <h2>Species prediction</h2>
         <h3></h3>
+        <div class="table-container">
         <table>
             <tr>
                 <th>Scientific name</th>
@@ -62,6 +108,7 @@ with open("jasenresult.example.json", "r") as jsonfile:
             </tr>
         {% endfor %}
         </table>
+        </div>
         <h2>Typing</h2>
         <h3></h3>
         {% for typ in data["typing_result"] %}
@@ -91,21 +138,34 @@ with open("jasenresult.example.json", "r") as jsonfile:
                 <td> {{typ["result"]["n_missing"]}} </td>
             </tr>
         </table>
-        {% endfor %}
+        {% endfor %}   
         <h2>Other predictions</h2>
         <h3>Report from resfinder</h3>
-        <div style="overflow-y: scroll;">
+        <a class="button" onClick="toggleExpandTable(document.getElementById('resprediction')); toggleLabel(this);">EXPAND TABLE</a>
+        <div class="wrapper closed" id="resprediction">
         <table>
             <tr>
                 <th>Resistant</th>
                 <th>Susceptible</th>
             </tr>
-        {% for phe in data["element_type_result"] %}
+            {% for phe in data["element_type_result"] %}
             <tr>
-                <td> {{phe["result"]["phenotypes"]["susceptible"]}} </td>
-                <td> {{phe["result"]["phenotypes"]["resistant"]}} </td>
+                <td style="vertical-align: top;">
+                    <table>
+                    {% for row in phe["result"]["phenotypes"]["resistant"] %}
+                        <tr><td> {{row}} </td></tr>
+                    {% endfor %}
+                    </table>
+                </td>
+                <td style="vertical-align: top;">
+                    <table>
+                    {% for row in phe["result"]["phenotypes"]["susceptible"] %}
+                        <tr><td> {{row}} </td></tr>
+                    {% endfor %}
+                    </table>
+                </td>
             </tr>
-        {% endfor %}
+            {% endfor %}
         </table>
         </div>
         <h2>Quality Control (QC)</h2>    
