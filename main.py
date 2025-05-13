@@ -226,42 +226,7 @@ a.button:hover {
         <tr><th scope="row">{{ label.replace("_", " ").capitalize() }}</th>                      
             <td>{{ res }}</td></tr>   
         {% endif %}
-        {% endfor %}
-        {% set res = qua["result"] %}
-        {% if res["total_length"] %}
-        <tr><th scope="row">Total length</th>                      
-            <td>{{ res["total_length"] }}</td></tr>   
-        {% endif %}
-        <tr><th scope="row">Reference length</th>                      
-            <td>{{ res["reference_length"] }}</td></tr>    
-        <tr><th scope="row">Largest contig</th>                      
-            <td>{{ res["largest_contig"] }}</td></tr>    
-        <tr><th scope="row">Number of contigs</th>               
-            <td>{{ res["n_contigs"] }}</td></tr>     
-        <tr><th scope="row">N50</th>                       
-            <td>{{ res["n50"] }}</td></tr>                                                  
-        <tr><th scope="row">Assembly GC</th>      
-            <td>{{ res["assembly_gc"] }}</td></tr> 
-        <tr><th scope="row">Reference GC</th>                      
-            <td>{{ res["reference_gc"] }}</td></tr>                                
-        <tr><th scope="row">Duplication ratio</th>      
-            <td>{{ res["duplication_ratio"] }}</td></tr>
-        <tr><th scope="row">Software</th>       
-            <td>{{ qua["software"] }}</td></tr
-        <tr><th scope="row">Version</th>        
-            <td>{{ qua["version"] }}</td></tr>                                   
-        <tr><th scope="row">Insert size</th>    
-            <td>{{ res["ins_size"] }}</td></tr>                                         
-        <tr><th scope="row">Insert size deviation</th>    
-            <td>{{ res["ins_size_dev"] }}</td></tr>
-        <tr><th scope="row">Mean coverage</th>                 
-            <td>{{ res["mean_cov"] }}</td></tr>
-        <tr><th scope="row">Mapped reads</th>                      
-            <td>{{ res["mapped_reads"] }}</td></tr>
-        <tr><th scope="row">Total reads</th>                    
-            <td>{{ res["tot_reads"] }}</td></tr>                                                     
-        <tr><th scope="row">IQR Median</th>    
-            <td>{{ res["iqr_median"]}} </td></tr>         
+        {% endfor %}      
     </table>
 </div>
 {% endfor %} 
