@@ -166,19 +166,19 @@ tmpl = Template(u'''\
     </tr>                                                                                     
 {% endfor %}                                                                                                                                                                                                                                
 </table>                                                                              
-</div>
-{% for qua in data["qc"] %}                                                 
-<table>                                                                     
-    <tr><th scope="row">Software</th>                                       
-        <td> {{ qua["software"] }} </td></tr>                               
+</div>                                        
+<table>                         
+{% for key, value in data["qc"] %}                                            
+    <tr><th scope="row">{{key}}</th>                                       
+        <td> {{ value["software"] }} </td></tr>                               
     <tr><th scope="row">Version</th>                                        
-        <td> {{ qua["version"] }} </td></tr>                                
+        <td> {{ value["version"] }} </td></tr>                                
     <tr><th scope="row">Assembly GC</th>                                    
-        <td> {{ qua["result"]["assembly_gc"] }} </td></tr>                  
+        <td> {{ value["result"]["assembly_gc"] }} </td></tr>                  
     <tr><th scope="row">Duplication ratio</th>                              
-        <td> {{ qua["result"]["duplication_ratio"] }} </td></tr>                 
-</table>                                                                    
-{% endfor %}                                                                                                                                                                  
+        <td> {{ value["result"]["duplication_ratio"] }} </td></tr>   
+{% endfor %}              
+</table>                                                                                                                                                                                                                         
   </body>
 </html>
 ''')

@@ -12,13 +12,27 @@ tmpl = Template(u'''\
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ data["sample_id"] }}</title>
+    <title>Sample: {{ data["sample_id"] }}</title>
 <style>
 body {
     font-family: arial, helvetica, sans-serif;
 	max-width: 1024px;
 	background: #fff;
 	padding: 1em;
+}
+
+h2 {
+    border-bottom: 1px solid #000;
+}
+
+address {
+    display: block;
+    font-style: normal;
+}
+
+.table-adress {
+    text-align: left;
+    font-size: 10pt;
 }
     
 .wrapper.closed {
@@ -72,7 +86,36 @@ a.button:hover {
 </head>
 <body>
 <h1>Jasen report for sample: {{ data["sample_id"] }}</h1>
-
+<div class="table-adress">
+<table>
+    <tr>
+        <th><h2 style="font-weight:normal; border-bottom: none;">Contact</h2></th>
+        <th><h2 style="font-weight:normal; border-bottom: none;">Customer</h2></th>
+    </tr>
+    <tr>
+        <td>
+            <address>
+                <strong>Clinical Genomics</strong><br>
+                Science for Life Laboratory<br>
+                Tomtebodavägen 23<br>
+                171 65 Solna<br>
+                <abbr title="Telefonnummer">T:</abbr> (08) 524 81 500
+            </address>
+        </td>
+        <td>
+            <address>
+                <h3 style="font-weight:normal">testing</h4><br>
+            </address>
+            <address>
+                <strong>JASEN-team</strong><br>
+                <abbr title="Förslagslåda">E:</abbr><a href="mailto:jasen-suggestions@scilifelab.se?subject=Förbättringsförslag">
+                jasen-suggestions@scilifelab.se
+                </a>
+            </address>
+        </td>
+    </tr>
+</table>
+</div>
 <h2>Species prediction</h2>
 <a class="button" onClick="toggleExpandTable(document.getElementById('speciesprediction')); toggleLabel(this);">EXPAND TABLE</a>
 <div class="wrapper closed" id="speciesprediction">
@@ -127,6 +170,14 @@ a.button:hover {
         <th scope="row">Number of novel</th>
         <td>{{ typ["result"]["n_missing"] }}</td>
     </tr>
+    {% for row in typ["result"]["alleles"] %}
+        {% if row.value != 'LNF' %}  
+    <tr>
+        <th scope="row">{{ row }}</th>
+        <td>{{ row["alleles"] }}</td>
+    </tr>
+        {% endif %}
+    {% endfor %}
 </table>
 {% endfor %}
 </div>
@@ -162,49 +213,58 @@ a.button:hover {
 </div>
 
 <h2>Quality Control (QC)</h2>
-<a class="button" onClick="toggleExpandTable(document.getElementById('qualitycontrol')); toggleLabel(this);">EXPAND TABLE</a>
-<div class="wrapper closed" id="qualitycontrol"> 
-{% for qua in data["qc"] %} 
+{% for qua in data["qc"] %}
+<a class="button" onClick="toggleExpandTable(document.getElementById('qc{{loop.index}}')); toggleLabel(this);">EXPAND TABLE</a>
+<div class="wrapper closed" id="qc{{loop.index}}">
     <table>
         <tr><th scope="row">Software</th>                             
             <td>{{ qua["software"] }}</td></tr>
         <tr><th scope="row">Version</th>      
             <td>{{ qua["version"] }}</td></tr>
+        {% for label, res in qua["result"].items() %}
+        {% if res %}
+        <tr><th scope="row">{{ label.replace("_", " ").capitalize() }}</th>                      
+            <td>{{ res }}</td></tr>   
+        {% endif %}
+        {% endfor %}
+        {% set res = qua["result"] %}
+        {% if res["total_length"] %}
         <tr><th scope="row">Total length</th>                      
-            <td>{{ qua["result"]["total_length"] }}</td></tr>    
+            <td>{{ res["total_length"] }}</td></tr>   
+        {% endif %}
         <tr><th scope="row">Reference length</th>                      
-            <td>{{ qua["result"]["reference_length"] }}</td></tr>    
+            <td>{{ res["reference_length"] }}</td></tr>    
         <tr><th scope="row">Largest contig</th>                      
-            <td>{{ qua["result"]["largest_contig"] }}</td></tr>    
+            <td>{{ res["largest_contig"] }}</td></tr>    
         <tr><th scope="row">Number of contigs</th>               
-            <td>{{ qua["result"]["n_contigs"] }}</td></tr>     
+            <td>{{ res["n_contigs"] }}</td></tr>     
         <tr><th scope="row">N50</th>                       
-            <td>{{ qua["result"]["n50"] }}</td></tr>                                                  
+            <td>{{ res["n50"] }}</td></tr>                                                  
         <tr><th scope="row">Assembly GC</th>      
-            <td>{{ qua["result"]["assembly_gc"] }}</td></tr> 
+            <td>{{ res["assembly_gc"] }}</td></tr> 
         <tr><th scope="row">Reference GC</th>                      
-            <td>{{ qua["result"]["reference_gc"] }}</td></tr>                                
+            <td>{{ res["reference_gc"] }}</td></tr>                                
         <tr><th scope="row">Duplication ratio</th>      
-            <td>{{ qua["result"]["duplication_ratio"] }}</td></tr>
+            <td>{{ res["duplication_ratio"] }}</td></tr>
         <tr><th scope="row">Software</th>       
             <td>{{ qua["software"] }}</td></tr
         <tr><th scope="row">Version</th>        
             <td>{{ qua["version"] }}</td></tr>                                   
         <tr><th scope="row">Insert size</th>    
-            <td>{{ qua["result"]["ins_size"] }}</td></tr>                                         
+            <td>{{ res["ins_size"] }}</td></tr>                                         
         <tr><th scope="row">Insert size deviation</th>    
-            <td>{{ qua["result"]["ins_size_dev"] }}</td></tr>
+            <td>{{ res["ins_size_dev"] }}</td></tr>
         <tr><th scope="row">Mean coverage</th>                 
-            <td>{{ qua["result"]["mean_cov"] }}</td></tr>
+            <td>{{ res["mean_cov"] }}</td></tr>
         <tr><th scope="row">Mapped reads</th>                      
-            <td>{{ qua["result"]["mapped_reads"] }}</td></tr>
+            <td>{{ res["mapped_reads"] }}</td></tr>
         <tr><th scope="row">Total reads</th>                    
-            <td>{{ qua["result"]["tot_reads"] }}</td></tr>                                                     
+            <td>{{ res["tot_reads"] }}</td></tr>                                                     
         <tr><th scope="row">IQR Median</th>    
-            <td>{{ qua["result"]["iqr_median"]}} </td></tr>           
+            <td>{{ res["iqr_median"]}} </td></tr>         
     </table>
-{% endfor %}
-</div> 
+</div>
+{% endfor %} 
 </body>
 </html>
 ''')

@@ -17,6 +17,12 @@ with open("jasenresult.example.json", "r") as jsonfile:
             body {
                 font-family: sans-serif;
             }
+            address {
+                display: block;
+                font-style: normal;
+            }
+            adress-table {
+            }
             .table-container {
                 border: 2.5px solid grey;
                 background-color: #E8E8E8;
@@ -84,9 +90,32 @@ with open("jasenresult.example.json", "r") as jsonfile:
 
       </head>
       <body>
-        <h1>Jasen reporter tool</h1>
+      <h1>Jasen reporter tool</h1>
+      <div class="row">
+        <div class="col">
+            <h2 style="font-weight:normal">Contact</h2>
+            <adress>
+                <strong>Clinical Genomics</strong><br>
+                Science for Life Laboratory<br>
+                Tomtebodavägen 23<br>
+                171 65 Solna<br>
+                <abbr title="Telefonnummer">T:</abbr> (08) 524 81 500
+            </adress>
+        </div>
+        <div class="col">
+            <h2 style="font-weight:normal">Customer</h2>
+            <address>
+                Testing<br>
+            </adress>
+            <adress>
+                <strong>JASEN-teamet</strong><br>
+                <abbr title="Förslagslåda">E:</abbr><a href="mailto:jasen-suggestions@scilifelab.se?subject=Förbättringsförslag">
+                jasen-suggestions@scilifelab.se
+                </a>
+            </address>
+        </div>
+      </div>
         <h2>Species prediction</h2>
-        <h3></h3>
         <div class="table-container">
         <table>
             <tr>
@@ -177,21 +206,21 @@ with open("jasenresult.example.json", "r") as jsonfile:
             <tr><th scope="row">Version</th>      
                 <td> {{ qua["version"] }} </td></tr>
             <tr><th scope="row">Total length</th>                      
-                <td> {{ qua["result"]["total_length"] }} </td></tr>    
+                <td> {{ res["total_length"] }} </td></tr>    
             <tr><th scope="row">Reference length</th>                      
-                <td> {{ qua["result"]["reference_length"] }} </td></tr>    
+                <td> {{ res["reference_length"] }} </td></tr>    
             <tr><th scope="row">Largest contig</th>                      
-                <td> {{ qua["result"]["largest_contig"] }} </td></tr>    
+                <td> {{ res["largest_contig"] }} </td></tr>    
             <tr><th scope="row">Number of contigs</th>               
-                <td> {{ qua["result"]["n_contigs"] }} </td></tr>     
+                <td> {{ res["n_contigs"] }} </td></tr>     
             <tr><th scope="row">N50</th>                       
-                <td> {{ qua["result"]["n50"] }} </td></tr>                                                  
+                <td> {{ res["n50"] }} </td></tr>                                                  
             <tr><th scope="row">Assembly GC</th>      
-                <td> {{ qua["result"]["assembly_gc"] }} </td></tr> 
+                <td> {{ res["assembly_gc"] }} </td></tr> 
             <tr><th scope="row">Reference GC</th>                      
-                <td> {{ qua["result"]["reference_gc"] }} </td></tr>                                
+                <td> {{ res["reference_gc"] }} </td></tr>                                
             <tr><th scope="row">Duplication ratio</th>      
-                <td> {{ qua["result"]["duplication_ratio"] }} </td></tr>
+                <td> {{ res["duplication_ratio"] }} </td></tr>
         </table>            
         {% endfor %}
         {% for qua in data["qc"] %}       
@@ -201,17 +230,17 @@ with open("jasenresult.example.json", "r") as jsonfile:
             <tr><th scope="row">Version</th>        
                 <td> {{ qua["version"] }} </td></tr>                                   
             <tr><th scope="row">Insert size</th>    
-                <td> {{ qua["result"]["ins_size"] }} </td></tr>                                         
+                <td> {{ res["ins_size"] }} </td></tr>                                         
             <tr><th scope="row">Insert size deviation</th>    
-                <td> {{ qua["result"]["ins_size_dev"] }} </td></tr>
+                <td> {{ res["ins_size_dev"] }} </td></tr>
             <tr><th scope="row">Mean coverage</th>                 
-                <td> {{ qua["result"]["mean_cov"] }} </td></tr>
+                <td> {{ res["mean_cov"] }} </td></tr>
             <tr><th scope="row">Mapped reads</th>                      
-                <td> {{ qua["result"]["mapped_reads"] }} </td></tr>
+                <td> {{ res["mapped_reads"] }} </td></tr>
             <tr><th scope="row">Total reads</th>                    
-                <td> {{ qua["result"]["tot_reads"] }} </td></tr>                                                     
+                <td> {{ res["tot_reads"] }} </td></tr>                                                     
             <tr><th scope="row">IQR Median</th>    
-                <td> {{ qua["result"]["iqr_median"] }} </td></tr>           
+                <td> {{ res["iqr_median"] }} </td></tr>           
         </table>
         {% endfor %}                                                                                                                                                                                  
       </body>
