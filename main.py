@@ -142,9 +142,9 @@ a.button:hover {
 </div>
 
 <h2>Typing</h2>
-<a class="button" onClick="toggleExpandTable(document.getElementById('typing')); toggleLabel(this);">EXPAND TABLE</a>
-<div class="wrapper closed" id="typing">
 {% for typ in data["typing_result"] %}
+<a class="button" onClick="toggleExpandTable(document.getElementById('typing{{loop.index}}')); toggleLabel(this);">EXPAND TABLE</a>
+<div class="wrapper closed" id="typing{{loop.index}}">
 <table>
     <tr>
         <th scope="row">Software</th>
@@ -164,23 +164,23 @@ a.button:hover {
     </tr>
     <tr>
         <th scope="row">Number of missing</th>
-        <td>{{ typ["result"]["n_novel"] }}</td>  
+        <td>{{ typ["result"]["n_novel"] | default('N/A') }}</td>  
     </tr>
     <tr>
         <th scope="row">Number of novel</th>
-        <td>{{ typ["result"]["n_missing"] }}</td>
+        <td>{{ typ["result"]["n_missing"] | default('N/A') }}</td>
     </tr>
-    {% for row in typ["result"]["alleles"] %}
-        {% if row.value != 'LNF' %}  
+    {% for label, allele in typ["result"]["alleles"].items() %}
+        {% if allele != 'LNF' %}  
     <tr>
-        <th scope="row">{{ row }}</th>
-        <td>{{ row["alleles"] }}</td>
+        <th scope="row">{{ label }}</th>
+        <td>{{ allele }}</td>
     </tr>
         {% endif %}
     {% endfor %}
 </table>
-{% endfor %}
 </div>
+{% endfor %}
 
 <h2>Other predictions</h2>
 <h3>Report from resfinder</h3>
@@ -233,8 +233,7 @@ a.button:hover {
 </body>
 </html>
 ''')
-#TODO: Split typing results into two tables based on software
-#TODO: Split Quality control results into two tables based on software
+
 #{ % -
 #for item in item_list %}
 #{{item}}
