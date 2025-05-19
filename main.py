@@ -4,6 +4,7 @@ import json
 #template = Template('Hello {{ name }}!')
 #print
 #template.render(name='John Doe')
+#alternative file: jasenresult.example.json    "SRR12146775_result.json"
 
 with open("jasenresult.example.json", "r") as jsonfile:
     jsondata = json.load(jsonfile)
@@ -191,7 +192,8 @@ a.button:hover {
         <th>Resistant</th>                                                            
         <th>Susceptible</th>                                                          
     </tr>                                                                                                                                             
-    {% for phe in data["element_type_result"] %}                                                  
+    {% for phe in data["element_type_result"] %}
+    {% if phe["software"] == "resfinder" %}                                                 
     <tr>                                                                                      
         <td style="vertical-align: top;">
         <table>
@@ -207,9 +209,37 @@ a.button:hover {
         {% endfor %}
         </table>
         </td>                               
-    </tr>                                                                                     
+    </tr>
+    {% endif %}                                                                                     
     {% endfor %}                                                                                                                                                                                                                                
 </table>                                                                              
+</div>
+
+<h3>Report from amrfinder</h3>
+<a class="button" onClick="toggleExpandTable(document.getElementById('amrfinder')); toggleLabel(this);">EXPAND TABLE</a>
+<div class="wrapper closed" id="amrfinder">                                                     
+<table>
+    {% for gen in data["element_type_result"] %} 
+    {% if gen["software"] == "amrfinder" and gen["type"] == "AMR" %}                                                                               
+        <tr>
+            <th>Number</th>
+            <th>Gene</th>
+            <th>Group</th>
+            <th>Reference</th>
+            <th>Identity %</th>
+        </tr>  
+        {% for row in gen["result"]["genes"] %}
+        <tr>
+            <td>test</td>
+            <td>{{ row["gene_symbol"] }}</td>
+            <td>{{ row["res_class"] }}</td>
+            <td>{{ row["ref_id"] }}</td>
+            <td>{{ row["identity"] }}</td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    {% endfor %}
+</table>
 </div>
 
 <h2>Quality Control (QC)</h2>
@@ -222,11 +252,22 @@ a.button:hover {
         <tr><th scope="row">Version</th>      
             <td>{{ qua["version"] }}</td></tr>
         {% for label, res in qua["result"].items() %}
-        {% if res %}
-        <tr><th scope="row">{{ label.replace("_", " ").capitalize() }}</th>                      
-            <td>{{ res }}</td></tr>   
-        {% endif %}
-        {% endfor %}      
+{# This really does not want to work
+            {% if res == "pct_above_x" %}
+                {% for lab, pct in res.items() %} 
+                <tr><th scope="row">{{ lab }}</th>
+                <td>{{ pct }}</td></tr>
+            {% elif res %}
+                <tr><th scope="row">{{ label.replace("_", " ").capitalize() }}</th>                      
+                <td>{{ res }}</td></tr>
+            {% endif %}
+        {% endfor %}
+#}
+            {% if res %}
+                <tr><th scope="row">{{ label.replace("_", " ").capitalize() }}</th>                      
+                <td>{{ res }}</td></tr>
+            {% endif %}
+        {% endfor %}         
     </table>
 </div>
 {% endfor %} 
